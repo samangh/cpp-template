@@ -91,3 +91,5 @@ compile_commands.json
 /.cache/
 
 /out/
+
+CMakeSettings.json
