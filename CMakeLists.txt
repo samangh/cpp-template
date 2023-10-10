@@ -95,6 +95,7 @@ find_package(Threads REQUIRED)
 
 add_subdirectory(lib)
 add_subdirectory(bin)
+add_subdirectory(sg/common)
 
 ##
 ## Compile options
