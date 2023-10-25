@@ -5,3 +5,7 @@
 	path = sg/common
 	url = git@github.com:samangh/sg-common.git
 	branch = master
+[submodule "sg/cmake"]
+	path = sg/cmake
+	url = git@github.com:samangh/sg-cmake.git
+	branch = master

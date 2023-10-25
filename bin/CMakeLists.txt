@@ -45,7 +45,6 @@ target_compile_features(${TARGET} PRIVATE cxx_std_17)
 ##
 
 configure_file (
-  "${PROJECT_SOURCE_DIR}/cmake/version.h.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/version.h"
-  )
+  "${PROJECT_SOURCE_DIR}/sg/cmake/version.h.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/version.h")
 
