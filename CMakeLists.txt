@@ -109,7 +109,7 @@ foreach(t ${TARGETS})
   # Enable extra errors for all projects
   target_compile_options(${t}
     PRIVATE
-     $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:-Wall>
+     $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:-Wall -Wextra>
      $<$<CXX_COMPILER_ID:MSVC>:/permissive->)
 
   # Link against MSVC statically if enabled
