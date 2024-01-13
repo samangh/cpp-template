@@ -93,9 +93,10 @@ find_package(Threads REQUIRED)
 ## Targets/Sources
 ##
 
+add_subdirectory(sg/common)
+add_subdirectory(sg/imgui)
 add_subdirectory(lib)
 add_subdirectory(bin)
-add_subdirectory(sg/common)
 
 ##
 ## Compile options

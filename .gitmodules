@@ -9,3 +9,7 @@
 	path = sg/cmake
 	url = git@github.com:samangh/sg-cmake.git
 	branch = master
+[submodule "sg/imgui"]
+	path = sg/imgui
+	url = git@github.com:samangh/sg-imgui.git
+	branch = master
