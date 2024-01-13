@@ -64,6 +64,7 @@ get_standard_library_name(STANDARD_LIBRARY)
 
 find_package(Sanitizers REQUIRED)
 find_package(Threads REQUIRED)
+find_package(fmt REQUIRED)
 
 ##
 ## Boost
@@ -97,6 +98,7 @@ add_subdirectory(sg/common)
 add_subdirectory(sg/imgui)
 add_subdirectory(lib)
 add_subdirectory(bin)
+add_subdirectory(gui)
 
 ##
 ## Compile options
