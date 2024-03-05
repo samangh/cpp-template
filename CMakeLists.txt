@@ -24,6 +24,7 @@ else()
 endif()
 
 option (USE_STATIC_LIBS "Use external static libs if possible" ${USE_STATIC_LIBS_DEFAULT})
+option (OPTIMIZE_NATIVE "Optimize code for current architecture" OFF)
 
 if(MSVC)
   # Note: if using SDL2, will require SDL2 to be compiled with
@@ -87,12 +88,18 @@ add_subdirectory(gui)
 get_property(TARGETS GLOBAL PROPERTY ${PROJECT_NAME}_TARGETS)
 
 foreach(t ${TARGETS})
-
-  # Enable extra errors for all projects
   target_compile_options(${t}
     PRIVATE
-     $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:-Wall -Wextra>
-     $<$<CXX_COMPILER_ID:MSVC>:/permissive->)
+     ## Warnings
+     $<$<CXX_COMPILER_ID:GNU>:-Wall -Wextra>
+     $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:-Weverything>
+     $<$<CXX_COMPILER_ID:MSVC>:/permissive->
+
+     ## Native optimisation
+     ## for MSVC we assume CPU supports SSE4.2 and AVX512
+     $<$<AND:$<BOOL:${OPTIMIZE_NATIVE}>,$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>>:-march=native>
+     $<$<AND:$<BOOL:${OPTIMIZE_NATIVE}>,$<CXX_COMPILER_ID:MSVC>>:/arch:AVX512 /d2archSSE42>
+   )
 
   # Link against MSVC statically if enabled
   if (USE_STATIC_RUNTIME AND MSVC)
