@@ -95,8 +95,7 @@ foreach(t ${TARGETS})
   target_compile_options(${t}
     PRIVATE
      ## Warnings
-     $<$<CXX_COMPILER_ID:GNU>:-Wall -Wextra>
-     $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:-Weverything>
+     $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:-Wall -Wextra>
      $<$<CXX_COMPILER_ID:MSVC>:/permissive->
 
      # Set arch to native (i.e. use all processor flags)
