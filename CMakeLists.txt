@@ -24,7 +24,8 @@ else()
 endif()
 
 option (USE_STATIC_LIBS "Use external static libs if possible" ${USE_STATIC_LIBS_DEFAULT})
-option (OPTIMIZE_NATIVE "Optimize code for current architecture" OFF)
+option (ARCH_NATIVE "Optimise code for current architecture" OFF)
+option (USE_SSE "Enable global use of SSE if possible" OPTIMISE_NATIVE)
 
 if(MSVC)
   # Note: if using SDL2, will require SDL2 to be compiled with
@@ -69,6 +70,9 @@ find_package(Sanitizers REQUIRED)
 find_package(Threads REQUIRED)
 find_package(fmt REQUIRED)
 
+if(USE_SSE)
+  find_package(SSE OPTIONAL_COMPONENTS COMPONENTS SSE42 AVX2)
+endif()
 
 ##
 ## Targets/Sources
@@ -95,11 +99,12 @@ foreach(t ${TARGETS})
      $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:-Weverything>
      $<$<CXX_COMPILER_ID:MSVC>:/permissive->
 
-     ## Native optimisation
-     ## for MSVC we assume CPU supports SSE4.2 and AVX512
-     $<$<AND:$<BOOL:${OPTIMIZE_NATIVE}>,$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>>:-march=native>
-     $<$<AND:$<BOOL:${OPTIMIZE_NATIVE}>,$<CXX_COMPILER_ID:MSVC>>:/arch:AVX512 /d2archSSE42>
-   )
+     # Set arch to native (i.e. use all processor flags)
+     $<$<AND:$<BOOL:${ARCH_NATIVE}>,$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>>:-march=native>
+
+     # Enable SSE if
+     $<$<AND:$<BOOL:${USE_SSE}>,$<BOOL:${SSE_SSE41_FOUND}>>:SSE::SSE42>
+     $<$<AND:$<BOOL:${USE_SSE}>,$<BOOL:${SSE_AVX2_FOUND}>>:AVX2>)
 
   # Link against MSVC statically if enabled
   if (USE_STATIC_RUNTIME AND MSVC)
