@@ -99,11 +99,13 @@ foreach(t ${TARGETS})
      $<$<CXX_COMPILER_ID:MSVC>:/permissive->
 
      # Set arch to native (i.e. use all processor flags)
-     $<$<AND:$<BOOL:${ARCH_NATIVE}>,$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>>:-march=native>
+     $<$<AND:$<BOOL:${ARCH_NATIVE}>,$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>>:-march=native>)
 
+target_link_libraries(${t}
+    PRIVATE
      # Enable SSE if
      $<$<AND:$<BOOL:${USE_SSE}>,$<BOOL:${SSE_SSE41_FOUND}>>:SSE::SSE42>
-     $<$<AND:$<BOOL:${USE_SSE}>,$<BOOL:${SSE_AVX2_FOUND}>>:AVX2>)
+     $<$<AND:$<BOOL:${USE_SSE}>,$<BOOL:${SSE_AVX2_FOUND}>>:SSE::AVX2>)
 
   # Link against MSVC statically if enabled
   if (USE_STATIC_RUNTIME AND MSVC)
