@@ -7,14 +7,16 @@ env:
 
 jobs:
   build:
-    name: ${{matrix.config.os}}-${{matrix.config.cc}}
+    name: ${{matrix.config.os}}-${{matrix.config.cc}}-${{matrix.config.type}}
     runs-on: ${{ matrix.config.os }}
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         config:
-           - { os: ubuntu-latest, cc: gcc-13, cxx: g++-15}
-           - { os: ubuntu-latest, cc: clang-15, cxx: clang++-15}
+           - { os: ubuntu-latest, cc: gcc-13, cxx: g++-13, build-shared-libs: ON, type: shared }
+           - { os: ubuntu-latest, cc: gcc-13, cxx: g++-13, build-shared-libs: OFF, type: static }
+           - { os: ubuntu-latest, cc: clang-15, cxx: clang++-15, build-shared-libs: ON, type: shared }
+           - { os: ubuntu-latest, cc: clang-15, cxx: clang++-15, build-shared-libs: OFF, type: static }
 
     steps:
       - name: Checkout repository
@@ -41,7 +43,7 @@ jobs:
         run: |
              mkdir build
              cd build
-             cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+             cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_SHARED_LIBS=${{matrix.config.build-shared-libs}}
 
       - name: Build
         working-directory: ${{github.workspace}}/build
