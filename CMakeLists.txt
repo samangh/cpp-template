@@ -30,7 +30,7 @@ option (USE_SSE "Enable global use of SSE if possible" OPTIMISE_NATIVE)
 if(MSVC)
   # Note: if using SDL2, will require SDL2 to be compiled with
   # FORCE_STATIC_VCRT=ON
-  option(USE_STATIC_RUNTIME "Statically link against the C++ runtime" OFF)
+  option(USE_STATIC_RUNTIME "Statically link against the C++ runtime" USE_STATIC_LIBS)
 endif()
 
 ##
