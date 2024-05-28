@@ -1,15 +1,3 @@
 [submodule "external/sanitizers-cmake"]
 	path = external/sanitizers-cmake
 	url = https://github.com/arsenm/sanitizers-cmake.git
-[submodule "sg/common"]
-	path = sg/common
-	url = git@github.com:samangh/sg-common.git
-	branch = master
-[submodule "sg/cmake"]
-	path = sg/cmake
-	url = git@github.com:samangh/sg-cmake.git
-	branch = master
-[submodule "sg/imgui"]
-	path = sg/imgui
-	url = git@github.com:samangh/sg-imgui.git
-	branch = master
