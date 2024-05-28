@@ -1,3 +1,7 @@
 [submodule "external/sanitizers-cmake"]
 	path = external/sanitizers-cmake
 	url = https://github.com/arsenm/sanitizers-cmake.git
+[submodule "external/libsg"]
+	path = external/libsg
+	url = git@github.com:samangh/libsg.git
+	branch = master
