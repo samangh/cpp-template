@@ -37,7 +37,7 @@ endif()
 ## CMake module paths
 ##
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/sg/cmake")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/external/libsg/cmake")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/external/sanitizers-cmake/cmake")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/external/nilibddc/cmake")
 
@@ -78,8 +78,8 @@ endif()
 ## Targets/Sources
 ##
 
-add_subdirectory(sg/common)
-add_subdirectory(sg/imgui)
+add_subdirectory(external/libsg/common)
+add_subdirectory(external/libsg/imgui)
 add_subdirectory(lib)
 add_subdirectory(bin)
 add_subdirectory(gui)
