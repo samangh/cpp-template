@@ -10,6 +10,6 @@
 int main(int, char **) {
     sg::file_writer writer;
     writer.start("test.txt", nullptr, nullptr, nullptr, 200);
-    writer.write_line("TEST");
+    writer.write_line_async("TEST");
     writer.stop();
 }
