@@ -11,6 +11,14 @@ project(template
 set(NAMESPACE template)
 
 ##
+## CMake module paths
+##
+
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/external/libsg/cmake")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/external/sanitizers-cmake/cmake")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/external/nilibddc/cmake")
+
+##
 ## Build options
 ##
 
@@ -24,27 +32,15 @@ else()
 endif()
 
 option (USE_STATIC_LIBS "Use external static libs if possible" ${USE_STATIC_LIBS_DEFAULT})
+option (USE_STATIC_RUNTIME "Statically link against the C++ runtime" USE_STATIC_LIBS)
 option (ARCH_NATIVE "Optimise code for current architecture" OFF)
-option (USE_SSE "Enable global use of SSE if possible" OPTIMISE_NATIVE)
-
-if(MSVC)
-  # Note: if using SDL2, will require SDL2 to be compiled with
-  # FORCE_STATIC_VCRT=ON
-  option(USE_STATIC_RUNTIME "Statically link against the C++ runtime" USE_STATIC_LIBS)
-endif()
+option (USE_SSE "Enable global use of SSE if possible" ARCH_NATIVE)
 
 if(USE_STATIC_LIBS)
   include(prioritise_static_libraries)
   prioritise_static_libraries()
 endif()
 
-##
-## CMake module paths
-##
-
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/external/libsg/cmake")
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/external/sanitizers-cmake/cmake")
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/external/nilibddc/cmake")
 
 ##
 ## Compile support
@@ -96,29 +92,9 @@ add_subdirectory(gui)
 # Generate target list
 get_property(TARGETS GLOBAL PROPERTY ${PROJECT_NAME}_TARGETS)
 
+include(setup_target_options)
 foreach(t ${TARGETS})
-  target_compile_options(${t}
-    PRIVATE
-     ## Warnings
-     $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:-Wall -Wextra>
-     $<$<CXX_COMPILER_ID:MSVC>:/permissive->
-
-     # Set arch to native (i.e. use all processor flags)
-     $<$<AND:$<BOOL:${ARCH_NATIVE}>,$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>>:-march=native>)
-
-target_link_libraries(${t}
-    PRIVATE
-     # Enable SSE if
-     $<$<AND:$<BOOL:${USE_SSE}>,$<BOOL:${SSE_SSE41_FOUND}>>:SSE::SSE42>
-     $<$<AND:$<BOOL:${USE_SSE}>,$<BOOL:${SSE_AVX2_FOUND}>>:SSE::AVX2>)
-
-  # Link against MSVC statically if enabled
-  if (USE_STATIC_RUNTIME AND MSVC)
-    set_property(TARGET ${t} PROPERTY
-      MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-  endif()
-
-  add_sanitizers(${t})
+  setup_target_options(TARGET ${t})
 endforeach()
 
 foreach(t ${TARGETS})
