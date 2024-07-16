@@ -33,6 +33,11 @@ if(MSVC)
   option(USE_STATIC_RUNTIME "Statically link against the C++ runtime" USE_STATIC_LIBS)
 endif()
 
+if(USE_STATIC_LIBS)
+  include(prioritise_static_libraries)
+  prioritise_static_libraries()
+endif()
+
 ##
 ## CMake module paths
 ##
