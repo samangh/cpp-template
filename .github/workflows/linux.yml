@@ -15,10 +15,10 @@ jobs:
         os: [ubuntu-latest]
         type:
           - { build_shared_libs: ON, label: shared}
-          - { build_shared_libs: OFF, label: statuc}
+          - { build_shared_libs: OFF, label: static}
         compiler:
-          - {cc: gcc-13, cxx: g++-13}
-          - {cc: clang-15, cxx: clang++-15}
+          - {cc: gcc, cxx: g++}
+          - {cc: clang, cxx: clang++}
 
     steps:
       - name: Checkout repository
@@ -26,25 +26,25 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Set up Homebrew
-        uses: Homebrew/actions/setup-homebrew@master
+      # - name: Set up Homebrew
+      #   uses: Homebrew/actions/setup-homebrew@master
 
       - name: Install Packages
         run: |
              sudo apt update
-             sudo apt install coreutils libboost-dev libsdl2-dev libuv1-dev libfmt-dev
-             brew install zstd
+             sudo apt install coreutils libboost-dev libsdl2-dev libuv1-dev libfmt-dev libzstd-dev
+             # brew install zstd
 
       - name: Run CMake
         working-directory: ${{github.workspace}}
         env:
           CC: ${{ matrix.compiler.cc }}
           CXX: ${{ matrix.compiler.cxx }}
-          CMAKE_PREFIX_PATH: /home/linuxbrew
+          # CMAKE_PREFIX_PATH: /home/linuxbrew
         run: |
              mkdir build
              cd build
-             cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_SHARED_LIBS=${{matrix.type.build_shared_libs}}
+             cmake .. -DBUILD_SHARED_LIBS=${{matrix.type.build_shared_libs}}
 
       - name: Build
         working-directory: ${{github.workspace}}/build

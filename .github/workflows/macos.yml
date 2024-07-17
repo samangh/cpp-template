@@ -15,7 +15,7 @@ jobs:
         os: [macos-latest]
         type:
           - { build_shared_libs: ON, label: shared}
-          - { build_shared_libs: OFF, label: statuc}
+          - { build_shared_libs: OFF, label: static}
         compiler:
           - {cc: clang, cxx: clang++}
 
@@ -43,7 +43,7 @@ jobs:
         run: |
              mkdir build
              cd build
-             cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_SHARED_LIBS=${{matrix.type.build_shared_libs}}
+             cmake .. -DBUILD_SHARED_LIBS=${{matrix.type.build_shared_libs}}
 
       - name: Build
         working-directory: ${{github.workspace}}/build
