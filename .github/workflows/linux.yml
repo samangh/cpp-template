@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-24.04]
         type:
           - { build_shared_libs: ON, label: shared}
           - { build_shared_libs: OFF, label: static}
