@@ -31,11 +31,11 @@ jobs:
              cd build
              # The Releae setting is a workaround vcpkg and
              # multi-release targets
-             cmake .. \
-                   -DBUILD_SHARED_LIBS=${{ matrix.config.shared }} \
-                   -DUSE_STATIC_RUNTIME=${{ matrix.config.static_runtime }} \
-                   -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake \
-                   -DVCPKG_TARGET_TRIPLET=${{ matrix.config.triplet }} \
+             cmake .. `
+                   -DBUILD_SHARED_LIBS=${{ matrix.config.shared }} `
+                   -DUSE_STATIC_RUNTIME=${{ matrix.config.static_runtime }} `
+                   -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake `
+                   -DVCPKG_TARGET_TRIPLET=${{ matrix.config.triplet }} `
                    -DCMAKE_BUILD_TYPE=Release
 
       - name: Build
