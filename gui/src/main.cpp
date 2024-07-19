@@ -3,8 +3,8 @@
 #include <sg/imgui/imgui_wrapper_sdl2_opengl3.h>
 #include <fmt/format.h>
 
-#ifdef WIN32
-#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
+#ifdef MSVC
+    #pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
 #endif
 
 int main(int, char**)
