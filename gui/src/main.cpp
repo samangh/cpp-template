@@ -3,7 +3,7 @@
 #include <sg/imgui/imgui_wrapper_sdl2_opengl3.h>
 #include <fmt/format.h>
 
-#ifdef MSVC
+#ifdef _MSC_VER
     #pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
 #endif
 
