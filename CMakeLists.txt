@@ -36,6 +36,12 @@ add_subdirectory(lib)
 add_subdirectory(bin)
 add_subdirectory(gui)
 
+if(BUILD_TESTS)
+  include(CTest)
+  add_subdirectory(test)
+endif()
+
+
 ##
 ## Compile options
 ##
