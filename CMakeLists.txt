@@ -31,8 +31,7 @@ find_package(fmt REQUIRED)
 ## Targets/Sources
 ##
 
-add_subdirectory(external/libsg/common)
-add_subdirectory(external/libsg/imgui)
+add_subdirectory(external/libsg)
 add_subdirectory(lib)
 add_subdirectory(bin)
 add_subdirectory(gui)
