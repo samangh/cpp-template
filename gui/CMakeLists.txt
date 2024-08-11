@@ -40,12 +40,6 @@ target_link_libraries(${TARGET}
   )
 
 ##
-## Compiler flags
-##
-
-target_compile_features(${TARGET} PRIVATE cxx_std_17)
-
-##
 ## Version
 ##
 

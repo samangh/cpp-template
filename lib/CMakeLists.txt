@@ -23,25 +23,16 @@ target_include_directories(${TARGET}
     $<INSTALL_INTERFACE:include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
     $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/include>
-  PRIVATE
-  )
+  PRIVATE)
 
 target_link_libraries(${TARGET}
   INTERFACE
   PUBLIC
-    $<$<AND:$<CXX_COMPILER_ID:GNU>,$<VERSION_LESS:$<CXX_COMPILER_VERSION>,9.1>>:${STANDARD_LIBRARY}fs>
-    $<$<AND:$<CXX_COMPILER_ID:Clang>,$<VERSION_LESS:$<CXX_COMPILER_VERSION>,9.0>>:${STANDARD_LIBRARY}fs>
   PRIVATE)
 
 include (GenerateExportHeader)
 generate_export_header(${TARGET}
              EXPORT_FILE_NAME "${CMAKE_BINARY_DIR}/include/export/${TARGET}.h")
-
-##
-## Compiler flags
-##
-
-target_compile_features(${TARGET} PUBLIC cxx_std_20)
 
 ##
 ## Version
