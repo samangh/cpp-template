@@ -1,3 +1,5 @@
+#include "export/lib.h"
+
 #pragma once
 
-int test();
+LIB_EXPORT int test();
