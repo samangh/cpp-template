@@ -43,3 +43,7 @@ configure_file (
   "${CMAKE_CURRENT_BINARY_DIR}/version.h"
   )
 
+set_target_properties(${TARGET} PROPERTIES
+  VERSION ${PROJECT_VERSION}
+  SOVERSION ${PROJECT_VERSION_MAJOR})
+
