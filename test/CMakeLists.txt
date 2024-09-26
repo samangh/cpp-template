@@ -1,55 +1,52 @@
-set(TARGET "doctest_test")
+# Note, DON'T use local Catch2, as we wenat catch to be compiled using
+# our C++ standard version, otherwise we can't use string vectors, etc
+# inside the tests as they would bb passed thorugh a library boundary!
+#
+# See:
+# - https://github.com/catchorg/Catch2/issues/2046
+# - https://github.com/catchorg/Catch2/issues/2210
 
-set_property(GLOBAL APPEND PROPERTY ${PROJECT_NAME}_TARGETS ${TARGET})
+if(WIN32 OR MSYS2)
+  set(BUILD_SHARED_LIBS FALSE)
+endif()
 
-##
-## External projects
-##
+CPMAddPackage("gh:catchorg/catch2@3.7.0")
+target_compile_features(Catch2 PRIVATE cxx_std_20)
+target_compile_features(Catch2WithMain PRIVATE cxx_std_20)
 
-CPMAddPackage("gh:doctest/doctest@2.4.11")
+set(TARGET ${NAMESPACE}_test)
 
 ##
 ## Source files
 ##
 
-file(GLOB_RECURSE SRC_FILES
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
+setup_executable(
+  TARGET
+    ${TARGET}
+  NAMESPACE
+    ${NAMESPACE}
+  NAMESPACE_TARGET
+     ${TARGET}
+  DIRECTORY
+     ${CMAKE_CURRENT_SOURCE_DIR}
 
-add_executable(${TARGET} ${SRC_FILES})
-add_executable(${NAMESPACE}::${TARGET} ALIAS ${TARGET})
+  INCLUDE_PUBLIC
+  INCLUDE_PRIVATE
+  LINK_PRIVATE
+    lib
+    Catch2::Catch2WithMain
 
-##
-## Includes
-##
-
-target_include_directories(${TARGET}
-  INTERFACE
-  PUBLIC
-    $<INSTALL_INTERFACE:include>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
-    $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/include>
-  PRIVATE)
-
-target_link_libraries(${TARGET}
-  PRIVATE
-    doctest::doctest)
-
-##
-## Additional flags
-##
-
-target_compile_options(${TARGET} PRIVATE
-  $<$<COMPILE_LANG_AND_ID:CXX,GNU>:--coverage>)
-
-target_link_options(${TARGET} PRIVATE
-  $<$<COMPILE_LANG_AND_ID:CXX,GNU>:--coverage>)
+  COMPILE_FEATURES_PUBLIC
+    cxx_std_20
+  COMPILE_OPTIONS_PRIVATE
+    $<$<COMPILE_LANG_AND_ID:CXX,GNU>:--coverage>
+  LINK_OPTIONS_PRIVATE
+    $<$<COMPILE_LANG_AND_ID:CXX,GNU>:--coverage>
+)
 
 ##
 ## Enable testing
 ##
 
-enable_testing()
-include(${doctest_SOURCE_DIR}/scripts/cmake/doctest.cmake)
-doctest_discover_tests(${TARGET})
+include(${catch2_SOURCE_DIR}/extras/Catch.cmake)
+catch_discover_tests(${TARGET})

@@ -11,13 +11,13 @@ set(NAMESPACE template)
 ## CMake module paths
 ##
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/external/libsg/cmake")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/external/libsg/external/libsg_cmake/cmake")
 
 ##
 ## Build options
 ##
 
-include(DefaultCMakePreamble)
+include(DefaultPreamble)
 
 ##
 ## Packages
@@ -36,21 +36,13 @@ add_subdirectory(lib)
 add_subdirectory(bin)
 add_subdirectory(gui)
 
-if(BUILD_TESTS)
-  include(CTest)
+include(CTest)
+if(BUILD_TESTING)
   add_subdirectory(test)
 endif()
 
 
 ##
-## Compile options
+## Postamble
 ##
-
-# Generate target list
-get_property(TARGETS GLOBAL PROPERTY ${PROJECT_NAME}_TARGETS)
-
-include(setup_target_options)
-foreach(t ${TARGETS})
-  setup_target_options(TARGET ${t})
-  target_compile_features(${t} PRIVATE cxx_std_20)
-endforeach()
+include(DefaultPostamble)

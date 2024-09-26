@@ -1,4 +1,4 @@
-#include "version.h"
+#include "template/export/template_version.h"
 
 #include <sg/imgui/imgui_wrapper_sdl2_opengl3.h>
 #include <fmt/format.h>
