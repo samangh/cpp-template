@@ -1,6 +1,9 @@
 name: macOS
 
-on: [workflow_dispatch, pull_request]
+on: [workflow_dispatch, pull_request, push]
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   BUILD_TYPE: Debug
@@ -21,7 +24,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@master
+        uses: actions/checkout@v4
         with:
           submodules: recursive
 
@@ -30,8 +33,6 @@ jobs:
 
       - name: Install Packages
         run: |
-             # Workaround homebrew bug
-             brew install --overwrite python@3.12
              brew install zstd uv boost fmt sdl2
 
       - name: Run CMake
@@ -43,8 +44,16 @@ jobs:
         run: |
              mkdir build
              cd build
-             cmake .. -DBUILD_SHARED_LIBS=${{matrix.type.build_shared_libs}}
+             cmake .. -DBUILD_SHARED_LIBS=${{matrix.type.build_shared_libs}} -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DBENCHMARK=ON -DIPO=ON
 
       - name: Build
         working-directory: ${{github.workspace}}/build
         run: MAKEFLAGS=-j$(nproc) cmake --build .
+
+      - name: Install
+        working-directory: ${{github.workspace}}/build
+        run: cmake --install . --prefix ../prefix
+
+      - name: Test
+        working-directory: ${{github.workspace}}/build
+        run: ctest
