@@ -1,4 +1,4 @@
-#include <template/export/template_lib.h>
+#include <template/export/lib.h>
 
 #pragma once
 
