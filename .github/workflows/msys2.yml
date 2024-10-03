@@ -1,4 +1,4 @@
-name: Windows
+name: MSYS2
 
 on: [workflow_dispatch, pull_request, push]
 concurrency:
@@ -7,14 +7,18 @@ concurrency:
 
 jobs:
   build:
-    name: ${{matrix.config.name}}
+    name: ${{matrix.config.sys}}
     runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
     strategy:
       fail-fast: false
       matrix:
         config:
-           - { name: "static library and runtime", shared: OFF, static_runtime: ON, triplet: "x64-windows-static"}
-           - { name: "shared library", shared: ON, static_runtime: OFF, triplet: "x64-windows"}
+          - { sys: mingw64, CXXFLAGS: "" }
+          - { sys: ucrt64, CXXFLAGS: "" }
+          - { sys: clang64, CXXFLAGS: -fexperimental-library  }
 
     steps:
       - name: Checkout repository
@@ -23,28 +27,28 @@ jobs:
           submodules: recursive
 
       - name: Install dependencies
-        run: |
-             vcpkg --triplet ${{ matrix.config.triplet }} install boost-crc sdl2 fmt libuv zstd
-             vcpkg integrate install
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: ${{matrix.config.sys}}
+          update: true
+          pacboy: toolchain:p cmake:p boost:p SDL2:p fmt:p libuv:p zstd:p
 
       - name: Run CMake
         working-directory: ${{github.workspace}}
+        env:
+          CXXFLAGS: ${{matrix.config.CXXFLAGS}}
         run: |
              mkdir build
              cd build
              # The Releae setting is a workaround vcpkg and
              # multi-release targets
-             cmake .. `
-                   -DBUILD_SHARED_LIBS=${{ matrix.config.shared }} `
-                   -DUSE_STATIC_RUNTIME=${{ matrix.config.static_runtime }} `
-                   -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake `
-                   -DVCPKG_TARGET_TRIPLET=${{ matrix.config.triplet }} `
-                   -DBUILD_TESTING=ON -DBENCHMARK=ON `
-                   -DCMAKE_BUILD_TYPE=Release -DIPO=ON
+             cmake .. -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=ON -DBENCHMARK=ON -DCMAKE_BUILD_TYPE=Release
 
       - name: Build
         working-directory: ${{github.workspace}}/build
-        run: cmake --build . --config Release
+        env:
+          CXXFLAGS: ${{matrix.config.CXXFLAGS}}
+        run: cmake --build .
 
       - name: Install
         working-directory: ${{github.workspace}}/build
