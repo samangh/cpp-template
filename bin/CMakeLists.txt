@@ -18,6 +18,8 @@ setup_executable(
     $<$<BOOL:${WIN32}>:Winmm>
     lib
     SG::common
+    HDF5::HDF5
+    hdf5::hdf5_hl_cpp
   COMPILE_OPTIONS_INTERFACE
   COMPILE_OPTIONS_PUBLIC
   COMPILE_OPTIONS_PRIVATE

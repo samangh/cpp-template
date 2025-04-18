@@ -26,6 +26,7 @@ include(DefaultPreamble)
 # Setup boost variables, in case any of our projects use it
 find_package(Threads REQUIRED)
 find_package(fmt REQUIRED)
+find_package(HDF5 COMPONENTS CXX HL REQUIRED)
 
 ##
 ## Targets/Sources
