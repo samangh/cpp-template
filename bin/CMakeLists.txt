@@ -20,6 +20,7 @@ setup_executable(
     SG::common
     HDF5::HDF5
     hdf5::hdf5_hl_cpp
+    zstd::libzstd_shared
   COMPILE_OPTIONS_INTERFACE
   COMPILE_OPTIONS_PUBLIC
   COMPILE_OPTIONS_PRIVATE
@@ -32,4 +33,3 @@ setup_executable(
   # GENERATE_EXPORT_HEADER
   # STATIC
 )
-

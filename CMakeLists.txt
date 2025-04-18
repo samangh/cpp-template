@@ -27,6 +27,7 @@ include(DefaultPreamble)
 find_package(Threads REQUIRED)
 find_package(fmt REQUIRED)
 find_package(HDF5 COMPONENTS CXX HL REQUIRED)
+find_package(zstd REQUIRED)
 
 ##
 ## Targets/Sources
