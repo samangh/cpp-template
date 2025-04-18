@@ -12,6 +12,7 @@ jobs:
   build:
     name: ${{matrix.os}}-${{matrix.compiler.cc}}-${{matrix.type.label}}
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
     strategy:
       fail-fast: true
       matrix:
@@ -56,4 +57,4 @@ jobs:
 
       - name: Test
         working-directory: ${{github.workspace}}/build
-        run: ctest
+        run: ctest --output-on-failure
