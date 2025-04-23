@@ -39,9 +39,9 @@ int main(int, char **) {
     //H5Pset_shuffle(faplDataset);
 
     /* file image in memory */
-    auto faplFile = H5Pcreate(H5P_FILE_ACCESS);
-    H5Pset_fapl_core(faplFile, sizeof(double)*length, 0);
-    H5Pset_libver_bounds(faplFile, H5F_LIBVER_V110, H5F_LIBVER_LATEST);
+    H5::FileAccPropList faplFile;
+    faplFile.setLibverBounds(H5F_LIBVER_LATEST, H5F_LIBVER_LATEST);
+    faplFile.setCore(sizeof(double)*length, false);
 
     H5::H5File file;
     file = H5::H5File("test-image.hdf5", H5F_ACC_TRUNC, H5::FileCreatPropList::DEFAULT, faplFile);
@@ -60,23 +60,26 @@ int main(int, char **) {
         {
             auto dataset = group.createDataSet("test_channel"+ std::to_string(i), datatype, dataspace, faplDataset);
             dataset.write(v.data(), H5::PredType::NATIVE_DOUBLE);
+            dataset.close();
         }
+        dataspace.close();
+        group.close();
     }
 
     /* flush and get buffer */
     file.flush(H5F_scope_t::H5F_SCOPE_GLOBAL);
     auto requiredSize =H5Fget_file_image(file.getId(), NULL, 0);
-    // auto buff = sg::make_unique_c_buffer<std::byte>(requiredSize);
+    auto buff = sg::make_unique_c_buffer<std::byte>(requiredSize);
 
-    // /* write file */
-    // {
-    //     if (H5Fget_file_image(file.getId(), buff.get(), buff.size()) <0)
-    //         throw std::runtime_error("error saving file");
-    //     file.close();
+    /* write file */
+    {
+        if (H5Fget_file_image(file.getId(), buff.get(), buff.size()) <0)
+            throw std::runtime_error("error saving file");
+        file.close();
 
-    //     std::ofstream of("image.hdf5");
-    //     of.write((char*)buff.get(), buff.size());
-    // }
+        std::ofstream of("image.hdf5");
+        of.write((char*)buff.get(), buff.size());
+    }
 
     /* write double-compressed */
     // {
@@ -87,7 +90,6 @@ int main(int, char **) {
     // }
 
     H5Pclose(faplDataset);
-    H5Pclose(faplFile);
 
     std::cout << "raw size shoud be: " << std::to_string(length * ch_count * sizeof(double) / 1E6) << " MB" <<std::endl;
     std::cout << "HDF5 size was: " << std::to_string(requiredSize/ 1E6) << " MB" <<std::endl;
