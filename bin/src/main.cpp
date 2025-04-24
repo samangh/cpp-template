@@ -56,8 +56,7 @@ int main(int, char **) {
         H5::IntType datatype(H5::PredType::NATIVE_DOUBLE);
         datatype.setOrder(H5T_ORDER_LE);
 
-        hsize_t chNameCount=1;
-        auto dataspceChName=H5::DataSpace(1, &chNameCount);
+        auto dataspceChName=H5::DataSpace(H5S_SCALAR);
 
         for (int i =0; i <ch_count; ++i)
         {
