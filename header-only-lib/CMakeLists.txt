@@ -1,0 +1,19 @@
+setup_interface(
+  TARGET
+    header_only
+  NAMESPACE
+    ${NAMESPACE}
+  DIRECTORY
+    ${CMAKE_CURRENT_SOURCE_DIR}
+
+  INCLUDE_INTERFACE
+  LINK_INTERFACE
+    Threads::Threads
+    $<$<BOOL:${WIN32}>:Winmm>
+  COMPILE_OPTIONS_INTERFACE
+  COMPILE_FEATURES_INTERFACE
+    cxx_std_20
+
+  ## Options
+  GENERATE_EXPORT_HEADER
+)

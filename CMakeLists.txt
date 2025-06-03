@@ -32,6 +32,7 @@ find_package(fmt REQUIRED)
 ##
 
 add_subdirectory(external/libsg)
+add_subdirectory(header-only-lib)
 add_subdirectory(lib)
 add_subdirectory(bin)
 add_subdirectory(gui)

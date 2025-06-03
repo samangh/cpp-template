@@ -16,7 +16,8 @@ setup_executable(
   LINK_PRIVATE
     Threads::Threads
     $<$<BOOL:${WIN32}>:Winmm>
-    lib
+    template::lib
+    template::header_only
     SG::common
   COMPILE_OPTIONS_INTERFACE
   COMPILE_OPTIONS_PUBLIC
