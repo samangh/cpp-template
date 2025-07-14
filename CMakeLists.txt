@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.15.0)
 project(template
   VERSION "0.0.1"
   DESCRIPTION "template"
-  LANGUAGES C CXX)
+  LANGUAGES CXX)
 
 set(NAMESPACE template)
 
