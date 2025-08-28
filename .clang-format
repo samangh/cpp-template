@@ -6,3 +6,4 @@ BinPackArguments: false
 BinPackParameters: false
 PointerAlignment: Left
 AlignConsecutiveDeclarations: true
+AlignConsecutiveAssignments: true
