@@ -32,7 +32,7 @@ jobs:
         with:
           msystem: ${{matrix.config.sys}}
           update: true
-          pacboy: toolchain:p cmake:p boost:p SDL2:p fmt:p libuv:p zstd:p
+          pacboy: toolchain:p cmake:p boost:p SDL2:p fmt:p libuv:p zstd:p doxygen:p graphviz:p
 
       - name: Run CMake
         working-directory: ${{github.workspace}}

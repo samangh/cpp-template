@@ -34,7 +34,7 @@ jobs:
 
       - name: Install Packages
         run: |
-             brew install zstd uv boost fmt sdl2
+             brew install zstd uv boost fmt sdl2 doxygen graphviz
 
       - name: Run CMake
         working-directory: ${{github.workspace}}
