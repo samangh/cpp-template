@@ -7,7 +7,9 @@ setup_library(
      lib
   DIRECTORY
      ${CMAKE_CURRENT_SOURCE_DIR}
-
+  SOURCES_PRIVATE
+    src/test.cpp
+  SOURCES_PRIVATE
   INCLUDE_INTERFACE
   INCLUDE_PUBLIC
   INCLUDE_PRIVATE
@@ -26,5 +28,6 @@ setup_library(
 
   ## Options
   GENERATE_EXPORT_HEADER
+  # RECURSE_SRC_DIR
   # STATIC
 )

@@ -29,7 +29,8 @@ setup_executable(
      ${TARGET}
   DIRECTORY
      ${CMAKE_CURRENT_SOURCE_DIR}
-
+  SOURCES_PRIVATE
+    src/basic_test.cpp
   INCLUDE_PUBLIC
   INCLUDE_PRIVATE
   LINK_PRIVATE

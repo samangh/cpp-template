@@ -7,6 +7,8 @@ setup_executable(
      gui
   DIRECTORY
      ${CMAKE_CURRENT_SOURCE_DIR}
+  SOURCES_PRIVATE
+     src/main.cpp
 
   INCLUDE_INTERFACE
   INCLUDE_PUBLIC
@@ -30,5 +32,6 @@ setup_executable(
   ## Options
   # GENERATE_EXPORT_HEADER
   # STATIC
+  # RECURSE_SRC_DIR
 )
 

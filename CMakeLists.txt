@@ -8,14 +8,15 @@ project(template
 set(NAMESPACE template)
 
 ##
+## Options
+##
+
+
+##
 ## CMake module paths
 ##
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/external/libsg/external/libsg_cmake/cmake")
-
-##
-## Build options
-##
 
 include(DefaultPreamble)
 
