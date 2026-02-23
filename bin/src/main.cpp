@@ -1,11 +1,30 @@
 #include <template/header_only.h>
+#include <iostream>
+#include <sg/tcp_server.h>
 
-// Un-commonet when running a GUI (to hide Windows terminal)
-//
-// #ifdef WIN32
-// #pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
-// #endif
+using namespace sg::net;
 
-int main(int, char **) {
-    return header_only_func();
+int main(int, char**) {
+    // callback for when a client connects
+    tcp_server::session_created_cb_t onClientConnected = [&](tcp_server&, auto) {
+        std::cout << "Client connected" << std::endl;
+    };
+
+    // callback for when a client disconnects
+    tcp_server::session_disconnected_cb_t onClientDisconnected =
+        [&](tcp_server&, auto, auto) { std::cout << "Client disconnected" << std::endl; };
+
+    // callback for when data is available from client
+    tcp_server::session_data_available_cb_t onDataReceived =
+        [](tcp_server& l, auto id, const auto* data, size_t size) { l.write(id, data, size); };
+
+    end_point ep("127.0.0.1", 55555);
+
+    tcp_server server;
+    server.start({ep}, nullptr, nullptr, onClientConnected, onDataReceived, onClientDisconnected);
+
+    // Wait until server is stopped
+    server.future_get_once();
+
+    return 0;
 }
