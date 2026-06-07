@@ -16,7 +16,7 @@ set(NAMESPACE template)
 ## CMake module paths
 ##
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/external/libsg/external/libsg_cmake/cmake")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/external/libsg/cmake")
 
 include(DefaultPreamble)
 

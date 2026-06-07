@@ -21,7 +21,11 @@ int main(int, char**) {
     end_point ep("127.0.0.1", 55555);
 
     tcp_server server;
-    server.start({ep}, nullptr, nullptr, onClientConnected, onDataReceived, onClientDisconnected);
+    tcp_server::CallBacks callbacks;
+    callbacks.OnSessionCreated = onClientConnected;
+    callbacks.OnSessionDataAvailable = onDataReceived;
+    callbacks.OnDisconnected = onClientDisconnected;
+    server.start({ep}, callbacks);
 
     // Wait until server is stopped
     server.future_get_once();
