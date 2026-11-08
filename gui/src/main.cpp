@@ -10,9 +10,9 @@
 int main(int, char**)
 {
     sg::imgui::ImGuiWrapper::Callbacks cbs;
-    cbs.onStart     = [&](sg::imgui::IImGuiWrapper& gui) { gui.changeWindowTitle("Hello world!"); };
-    cbs.onEnd       = [&](sg::imgui::IImGuiWrapper&) {};
-    cbs.onIteration = [&](sg::imgui::IImGuiWrapper&, bool&) { ImGui::ShowDemoWindow(); };
+    cbs.onStart = [&](sg::imgui::IImGuiWrapper& gui) { gui.changeWindowTitle("Hello world!"); };
+    cbs.onEnd   = [&](sg::imgui::IImGuiWrapper&) {};
+    cbs.onDraw  = [&](sg::imgui::IImGuiWrapper&, bool&) { ImGui::ShowDemoWindow(); };
 
     auto wrap = sg::imgui::ImGuiWrapper(cbs, sg::imgui::ConfigFlags::Docking);
 
