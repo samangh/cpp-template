@@ -1,5 +1,5 @@
 #pragma once
 
-int header_only_func() {
+inline int header_only_func() {
 	return 1;
 };

@@ -20,7 +20,7 @@ setup_executable(
     $<$<BOOL:${WIN32}>:Winmm>
     template::lib
     template::header_only
-    SG::common
+    sg::net
   COMPILE_OPTIONS_INTERFACE
   COMPILE_OPTIONS_PUBLIC
   COMPILE_OPTIONS_PRIVATE
