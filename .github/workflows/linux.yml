@@ -5,59 +5,56 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  BUILD_TYPE: Debug
-
 jobs:
   build:
-    name: ${{matrix.os}}-${{matrix.compiler.cc}}-${{matrix.type.label}}
+    name: ${{matrix.os}}-${{matrix.config.label}}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 20
     strategy:
       fail-fast: true
       matrix:
-        os: [ubuntu-24.04]
-        type:
-          - { build_shared_libs: ON, label: shared}
-          - { build_shared_libs: OFF, label: static}
-        compiler:
-          - {cc: gcc, cxx: g++}
-          - {cc: clang, cxx: clang++}
+        os: [ubuntu-latest]
+        config:
+          - {label: "gcc-shared",   cc: gcc,   cxx: g++,     shared: ON}
+          - {label: "gcc-static",   cc: gcc,   cxx: g++,     shared: OFF}
+          - {label: "clang-shared", cc: clang, cxx: clang++, shared: ON}
+          - {label: "clang-static", cc: clang, cxx: clang++, shared: OFF}
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           submodules: recursive
-
-      # - name: Set up Homebrew
-      #   uses: Homebrew/actions/setup-homebrew@master
 
       - name: Install Packages
         run: |
              sudo apt update
-             sudo apt install coreutils libboost-dev libsdl2-dev libuv1-dev libfmt-dev libzstd-dev doxygen graphviz
-             # brew install zstd
+             sudo apt install coreutils libsdl2-dev libzstd-dev doxygen graphviz pkgconf libssl-dev
+             # below is kept because ubuntu libssl-dev has some missing dependencies, see
+             #  - https://bugs.launchpad.net/ubuntu/+source/openssl/+bug/2158026
+             #  - https://bugs.launchpad.net/ubuntu/+source/openssl/+bug/2162943/comments/11
+             sudo apt install zlib1g-dev libjitterentropy3-dev
 
       - name: Run CMake
         working-directory: ${{github.workspace}}
-        env:
-          CC: ${{ matrix.compiler.cc }}
-          CXX: ${{ matrix.compiler.cxx }}
-          # CMAKE_PREFIX_PATH: /home/linuxbrew
+        # Download fmt and Boost from source, as the packaged ones are too old
         run: |
              mkdir build
              cd build
-             cmake .. -DBUILD_SHARED_LIBS=${{matrix.type.build_shared_libs}} -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DBENCHMARK=ON -DIPO=ON
+             cmake .. \
+                   -DBUILD_SHARED_LIBS=${{matrix.config.shared}} -DCMAKE_BUILD_TYPE=Release \
+                   -DCMAKE_C_COMPILER="${{matrix.config.cc}}" -DCMAKE_CXX_COMPILER="${{matrix.config.cxx}}" \
+                   -DBUILD_TESTING=ON -DBUILD_DOCS=ON -DIPO=ON \
+                   -DOWN_FMT=ON -DOWN_BOOST=ON -DBOOST_INCLUDE_LIBRARIES=asio\;uuid\;crc
 
       - name: Build
         working-directory: ${{github.workspace}}/build
-        run: cmake --build .
-
-      - name: Test
-        working-directory: ${{github.workspace}}/build
-        run: ctest --output-on-failure
+        run: MAKEFLAGS=-j$(nproc) cmake --build .
 
       - name: Install
         working-directory: ${{github.workspace}}/build
         run: cmake --install . --prefix ../prefix
+
+      - name: Test
+        working-directory: ${{github.workspace}}/build
+        run: ctest --output-on-failure

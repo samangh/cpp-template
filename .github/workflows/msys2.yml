@@ -9,7 +9,7 @@ jobs:
   build:
     name: ${{matrix.config.sys}}
     runs-on: windows-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     defaults:
       run:
         shell: msys2 {0}
@@ -17,13 +17,15 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { sys: mingw64, CXXFLAGS: "" }
-          - { sys: ucrt64, CXXFLAGS: "" }
-          - { sys: clang64, CXXFLAGS: -fexperimental-library  }
+          - { sys: clang64 }
+          # We don't use these, as GCC (as of v14.10 on 02/2025) has a bug when using semaphores,
+          # see https://gcc.gnu.org/bugzilla/show_bug.cgi?id=104928
+          # - { sys: mingw64 }
+          # - { sys: ucrt64 }
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           submodules: recursive
 
@@ -32,24 +34,18 @@ jobs:
         with:
           msystem: ${{matrix.config.sys}}
           update: true
-          pacboy: toolchain:p cmake:p boost:p SDL2:p fmt:p libuv:p zstd:p doxygen:p graphviz:p
+          pacboy: toolchain:p cmake:p boost:p SDL2:p fmt:p zstd:p openssl:p doxygen:p graphviz:p
 
       - name: Run CMake
         working-directory: ${{github.workspace}}
-        env:
-          CXXFLAGS: ${{matrix.config.CXXFLAGS}}
         run: |
              mkdir build
              cd build
-             # The Releae setting is a workaround vcpkg and
-             # multi-release targets
-             cmake .. -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=ON -DBENCHMARK=ON -DCMAKE_BUILD_TYPE=Release
+             cmake .. -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=ON -DBUILD_DOCS=ON -DCMAKE_BUILD_TYPE=Release -DLIBSG_IMGUI_DIRECTX=ON -DLIBSG_IMGUI_OPENGL=ON
 
       - name: Build
         working-directory: ${{github.workspace}}/build
-        env:
-          CXXFLAGS: ${{matrix.config.CXXFLAGS}}
-        run: cmake --build .
+        run: MAKEFLAGS=-j$(nproc) cmake --build .
 
       - name: Install
         working-directory: ${{github.workspace}}/build

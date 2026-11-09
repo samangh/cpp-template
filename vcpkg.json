@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "template",
+  "dependencies": [
+    "boost-asio",
+    "boost-crc",
+    "boost-stacktrace",
+    "boost-uuid",
+    "fmt",
+    "openssl",
+    "sdl2",
+    "zstd"
+  ]
+}
