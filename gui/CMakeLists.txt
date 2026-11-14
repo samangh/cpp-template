@@ -17,9 +17,8 @@ setup_executable(
   LINK_PUBLIC
   LINK_PRIVATE
     lib
-    SG::common
-    SG::imgui
-    fmt::fmt
+    sg::common
+    sg::imgui
     portable_file_dialogs
   COMPILE_OPTIONS_INTERFACE
   COMPILE_OPTIONS_PUBLIC
